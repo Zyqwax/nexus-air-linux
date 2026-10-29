@@ -75,45 +75,64 @@ This project is a 100% native Linux driver and user-space management suite creat
 
 ---
 
-## 🚀 Installation & Usage
+## 📦 İndirme Seçenekleri (Downloads)
 
-### 1. AppImage (Universal for all Linux Distros)
-Download the latest `Nexus_Air_V1-x86_64.AppImage` from [GitHub Releases](https://github.com/morluto/nexus-air-linux/releases):
+GitHub Releases bölümünde her yeni sürüm için otomatik olarak aşağıdaki paketler yayınlanır:
 
+| Dağıtım / Format | Dosya | Açıklama |
+|---|---|---|
+| **Tüm Linux (Universal)** | `Nexus_Air_V1-x86_64.AppImage` | Kurulum gerektirmeden çift tıkla çalışan bağımsız uygulama |
+| **Taşınabilir ZIP (Portable)** | `nexus-air-v1.0.0-linux-portable.zip` | Kurulumsuz, doğrudan çalıştırılabilir scriptler ve `install.sh` / `uninstall.sh` arşivi |
+| **Ubuntu / Debian / Mint** | `nexus-air_1.0.0-1_all.deb` | `.deb` paketi (`sudo dpkg -i` veya `apt install ./...`) |
+| **Fedora / RHEL / Nobara** | `nexus-air-1.0.0-1.noarch.rpm` | `.rpm` paketi (`sudo dnf install ./...`) |
+| **Arch / CachyOS / Manjaro** | `PKGBUILD` | AUR / makepkg ile native Arch paketi |
+| **Python PyPI / pip** | `.tar.gz` / `.whl` | `pip install .` ile Python ortamına kurulum |
+
+---
+
+## 🚀 Kurulum ve Çalıştırma
+
+### 1. Taşınabilir Script Arşivi (Portable ZIP — Tüm Dağıtımlar İçin)
+Paket yöneticisiyle uğraşmak istemiyorsanız:
+```bash
+# Arşivi açın:
+unzip nexus-air-v1.0.0-linux-portable.zip
+cd nexus-air-v1.0.0-linux-portable
+
+# Doğrudan kurmadan çalıştırmak için:
+./nexus-air status       # Terminalden durum gösterir
+./nexus-air-gui          # Grafik arayüzü açar
+
+# Veya tek komutla sisteme kalıcı olarak kurmak için:
+sudo ./install.sh
+```
+
+### 2. Evrensel AppImage
 ```bash
 chmod +x Nexus_Air_V1-x86_64.AppImage
 
-# One-time udev rule installation (so you don't need sudo):
+# İlk defa kullanıyorsanız udev iznini verin (root olmadan çalıştırmak için):
 ./Nexus_Air_V1-x86_64.AppImage udev
 
-# Launch GTK4 GUI:
+# Grafik arayüzü başlatın:
 ./Nexus_Air_V1-x86_64.AppImage
 ```
 
-### 2. Arch Linux / CachyOS / Manjaro
-Install via `PKGBUILD`:
+### 3. Ubuntu / Debian / Linux Mint (.deb)
+```bash
+sudo dpkg -i nexus-air_1.0.0-1_all.deb || sudo apt-get install -f
+```
+
+### 4. Fedora / RHEL (.rpm)
+```bash
+sudo dnf install ./nexus-air-1.0.0-1.noarch.rpm
+```
+
+### 5. Arch Linux / CachyOS (PKGBUILD)
 ```bash
 git clone https://github.com/morluto/nexus-air-linux.git
 cd nexus-air-linux/packaging/arch
 makepkg -si
-```
-
-### 3. Debian / Ubuntu / Linux Mint
-```bash
-sudo apt install -y python3 python3-gi gir1.2-gtk-4.0
-git clone https://github.com/morluto/nexus-air-linux.git
-cd nexus-air-linux
-pip install .
-sudo nexus-air udev
-```
-
-### 4. Fedora / RHEL / Nobara
-```bash
-sudo dnf install -y python3 python3-gobject gtk4
-git clone https://github.com/morluto/nexus-air-linux.git
-cd nexus-air-linux
-pip install .
-sudo nexus-air udev
 ```
 
 ---

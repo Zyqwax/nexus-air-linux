@@ -20,34 +20,50 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install build tools and AppImage dependencies
+      - name: Install build tools and dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libfuse2 file wget python3-gi gir1.2-gtk-4.0
+          sudo apt-get install -y libfuse2 file wget rpm dpkg zip python3-gi gir1.2-gtk-4.0
           python -m pip install --upgrade pip build wheel setuptools
 
       - name: Build Python sdist and wheel
         run: |
-          python -m build
+          python -m build --outdir dist/
+
+      - name: Build Debian/Ubuntu (.deb) Package
+        run: |
+          chmod +x packaging/debian/build-deb.sh
+          ./packaging/debian/build-deb.sh
+
+      - name: Build Fedora/RHEL (.rpm) Package
+        run: |
+          mkdir -p rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+          VERSION="${GITHUB_REF_NAME#v}"
+          git archive --format=tar.gz --prefix="nexus-air-${VERSION}/" HEAD > "rpmbuild/SOURCES/nexus-air-${VERSION}.tar.gz"
+          sed -i "s/^Version:.*/Version:        ${VERSION}/" packaging/rpm/nexus-air.spec
+          rpmbuild --define "_topdir $(pwd)/rpmbuild" -ba packaging/rpm/nexus-air.spec
+          cp rpmbuild/RPMS/noarch/*.rpm dist/ || cp rpmbuild/RPMS/*/*.rpm dist/
+
+      - name: Build Portable Standalone Linux ZIP Bundle
+        run: |
+          chmod +x packaging/portable/build-portable-zip.sh
+          ./packaging/portable/build-portable-zip.sh
 
       - name: Build AppImage
         run: |
-          # Download appimagetool
           wget https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage -O /tmp/appimagetool
           chmod +x /tmp/appimagetool
-
-          # Prepare AppDir
-          bash packaging/appimage/build-appimage.sh
-
-          # Bundle AppImage
+          chmod +x packaging/appimage/AppRun packaging/appimage/build-appimage.sh
+          ./packaging/appimage/build-appimage.sh
           ARCH=x86_64 /tmp/appimagetool --appimage-extract-and-run build/AppDir dist/Nexus_Air_V1-x86_64.AppImage
 
       - name: Generate Checksums
         run: |
           cd dist
           sha256sum * > SHA256SUMS
+          cat SHA256SUMS
 
-      - name: Create GitHub Release and Upload Assets
+      - name: Create GitHub Release and Upload All Artifacts
         uses: softprops/action-gh-release@v2
         with:
           files: |
