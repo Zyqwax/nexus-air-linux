@@ -4,21 +4,21 @@ pkgver=1.0.0
 pkgrel=1
 pkgdesc="Linux driver, CLI, and GTK4 control center for Claw's Nexus Air V1 wireless/wired mouse"
 arch=('any')
-url="https://github.com/morluto/nexus-air-linux"
+url="https://github.com/Zyqwax/nexus-air-linux"
 license=('MIT')
 depends=('python' 'python-gobject' 'gtk4')
-makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools')
+makedepends=('python-setuptools' 'python-wheel' 'python-pip')
 source=("$pkgname-$pkgver.tar.gz")
 sha256sums=('SKIP')
 
 build() {
     cd "$pkgname-$pkgver"
-    python -m build --wheel --no-isolation
+    python -m pip wheel --no-deps --no-build-isolation -w dist .
 }
 
 package() {
     cd "$pkgname-$pkgver"
-    python -m installer --destdir="$pkgdir" dist/*.whl
+    python -m pip install --no-deps --no-build-isolation --prefix=/usr --root="$pkgdir" dist/*.whl
 
     # Desktop entry and icon
     install -Dm644 data/org.cachyos.NexusAirV1.desktop "$pkgdir/usr/share/applications/org.cachyos.NexusAirV1.desktop"

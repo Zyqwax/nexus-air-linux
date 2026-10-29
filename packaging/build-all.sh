@@ -31,8 +31,16 @@ echo "==> [3/4] Building Portable Linux standalone ZIP archive..."
 bash "${ROOT_DIR}/packaging/portable/build-portable-zip.sh"
 
 # 5. Build AppImage (or AppDir)
-echo "==> [4/4] Building AppImage / AppDir..."
+echo "==> [4/5] Building AppImage / AppDir..."
 bash "${ROOT_DIR}/packaging/appimage/build-appimage.sh"
+
+# 6. Build Arch Linux / CachyOS package (.pkg.tar.zst)
+if command -v makepkg >/dev/null 2>&1; then
+    echo "==> [5/5] Building Arch Linux / CachyOS (.pkg.tar.zst) package..."
+    bash "${ROOT_DIR}/packaging/arch/build-arch-pkg.sh"
+else
+    echo "==> Skipping Arch package (makepkg not found)."
+fi
 
 echo ""
 echo "============================================="
