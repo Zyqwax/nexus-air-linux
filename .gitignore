@@ -28,7 +28,7 @@ MANIFEST
 
 # PyInstaller / AppImage artifacts
 *.manifest
-*.spec
+/dist/*.spec
 *.AppImage
 AppDir/
 
