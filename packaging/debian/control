@@ -1,0 +1,12 @@
+Package: nexus-air
+Version: 1.0.0-1
+Section: utils
+Priority: optional
+Architecture: all
+Depends: python3 (>= 3.10), python3-gi, gir1.2-gtk-4.0
+Maintainer: Nexus Air Linux Contributors <info@example.com>
+Description: Linux driver and GTK4 GUI for Claw's Nexus Air V1 gaming mouse
+ Nexus Air Linux is a reverse-engineered Linux driver, command line tool,
+ and modern GTK4 configuration GUI for Claw's Nexus Air V1 wireless and wired
+ gaming mouse. Supports full DPI stages, per-stage RGB colors, polling rate,
+ debounce, motion sync, angle snapping, sleep timers, and profile switching.

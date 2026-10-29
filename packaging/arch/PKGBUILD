@@ -1,0 +1,32 @@
+# Maintainer: Claw's Technology Nexus Air Contributors
+pkgname=nexus-air
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Linux driver, CLI, and GTK4 control center for Claw's Nexus Air V1 wireless/wired mouse"
+arch=('any')
+url="https://github.com/morluto/nexus-air-linux"
+license=('MIT')
+depends=('python' 'python-gobject' 'gtk4')
+makedepends=('python-build' 'python-installer' 'python-wheel' 'python-setuptools')
+source=("$pkgname-$pkgver.tar.gz")
+sha256sums=('SKIP')
+
+build() {
+    cd "$pkgname-$pkgver"
+    python -m build --wheel --no-isolation
+}
+
+package() {
+    cd "$pkgname-$pkgver"
+    python -m installer --destdir="$pkgdir" dist/*.whl
+
+    # Desktop entry and icon
+    install -Dm644 data/org.cachyos.NexusAirV1.desktop "$pkgdir/usr/share/applications/org.cachyos.NexusAirV1.desktop"
+    install -Dm644 data/icons/nexus-air.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/nexus-air.svg"
+
+    # udev rule
+    install -Dm644 data/99-nexus-air.rules "$pkgdir/usr/lib/udev/rules.d/99-nexus-air.rules"
+
+    # License
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
