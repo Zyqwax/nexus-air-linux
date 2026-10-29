@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Nexus Air V1
+Comment=Claw's Nexus Air V1 Mouse Configuration Tool
+GenericName=Gaming Mouse Configuration
+Exec=nexus-air gui
+Icon=nexus-air
+Terminal=false
+Type=Application
+Categories=Settings;HardwareSettings;
+Keywords=mouse;gaming;dpi;rgb;claw;nexus;cachyos;
+StartupNotify=true
+StartupWMClass=org.cachyos.NexusAirV1
