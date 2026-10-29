@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install build tools and AppImage dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libfuse2 file wget python3-gi gir1.2-gtk-4.0
+          python -m pip install --upgrade pip build wheel setuptools
+
+      - name: Build Python sdist and wheel
+        run: |
+          python -m build
+
+      - name: Build AppImage
+        run: |
+          # Download appimagetool
+          wget https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage -O /tmp/appimagetool
+          chmod +x /tmp/appimagetool
+
+          # Prepare AppDir
+          bash packaging/appimage/build-appimage.sh
+
+          # Bundle AppImage
+          ARCH=x86_64 /tmp/appimagetool --appimage-extract-and-run build/AppDir dist/Nexus_Air_V1-x86_64.AppImage
+
+      - name: Generate Checksums
+        run: |
+          cd dist
+          sha256sum * > SHA256SUMS
+
+      - name: Create GitHub Release and Upload Assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/*
+          draft: false
+          prerelease: false
+          generate_release_notes: true
